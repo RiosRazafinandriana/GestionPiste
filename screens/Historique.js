@@ -1,6 +1,7 @@
 import { View, Text, SectionList, StyleSheet, ScrollView } from "react-native";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import { API_URL } from '../config';
 
 export default function Historique({ navigation }) {
@@ -13,7 +14,6 @@ export default function Historique({ navigation }) {
                 console.error('Response data is not an array');
                 return;
             }
-            // Filtrer les vols pour exclure ceux avec l'état 'prévue'
             const filteredVols = res.data.filter(vol => vol.état !== 'prévue');
             setVols(filteredVols);
         } catch (err) {
@@ -21,9 +21,11 @@ export default function Historique({ navigation }) {
         }
     };
 
-    useEffect(() => {
-        fetchVols();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchVols();
+        }, [])
+    );
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -37,7 +39,7 @@ export default function Historique({ navigation }) {
             <Text style={[styles.cell, { width: 180 }]}>{item.compagnie}</Text>
             <Text style={[styles.cell, { width: 120 }]}>{item.typeAvion}</Text>
             <Text style={[styles.cell, { width: 120 }]}>{formatDate(item.heurePrévue)}</Text>
-            <Text style={[styles.cell, { width: 120 }]}>{item.heureEffective ? formatDate(item.heureEffective) : 'Non définie'}</Text>
+            <Text style={[styles.cell, { width: 120 }]}>{item.heureEffective ? formatDate(item.heureEffective) : ''}</Text>
             <Text style={[styles.cell, { width: 120 }]}>{item.état}</Text>
         </View>
     );
@@ -51,8 +53,8 @@ export default function Historique({ navigation }) {
                         <Text style={[styles.headerText, { width: 120 }]}>Type</Text>
                         <Text style={[styles.headerText, { width: 180 }]}>Compagnie</Text>
                         <Text style={[styles.headerText, { width: 120 }]}>Type Avion</Text>
-                        <Text style={[styles.headerText, { width: 120 }]}>Heure Prévue</Text>
-                        <Text style={[styles.headerText, { width: 120 }]}>Heure Effective</Text>
+                        <Text style={[styles.headerText, { width: 120 }]}>Date Prévue</Text>
+                        <Text style={[styles.headerText, { width: 120 }]}>Date Effective</Text>
                         <Text style={[styles.headerText, { width: 120 }]}>Etat</Text>
                     </View>
                     <SectionList

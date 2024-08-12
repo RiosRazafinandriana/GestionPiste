@@ -89,10 +89,10 @@ export default function Piste({ navigation }) {
     <TouchableOpacity
       style={[styles.row, selectedPiste?.numéroPiste === item.numéroPiste && styles.selectedRow]}
       onLongPress={() => {
-        console.log('Selected piste:', item); // Vérifiez les valeurs ici
-        setSelectedPiste(item); // Set selectedPiste for modal
+        console.log('Selected piste:', item); 
+        setSelectedPiste(item); 
       }} 
-      delayLongPress={5} // Set the delay for long press to 1000 ms
+      delayLongPress={5} 
     >
       <Text style={[styles.cell, { width: 70 }]}>{item.numéroPiste}</Text>
       <Text style={[styles.cell, { width: 150 }]}>{item.longueur} x {item.largeur}</Text>
